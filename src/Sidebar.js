@@ -6,9 +6,15 @@ class Sidebar extends Component {
     }
 
     render() {
+        const { query } = this.state;
         return (
             <aside className="sidebar">
                 <h1>Huela Muendo</h1>
+            <input
+                type="text"
+                placeholder="Search places!"
+                value={query}
+            />
             </aside>
         )
     }
