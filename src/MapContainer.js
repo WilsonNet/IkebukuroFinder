@@ -14,13 +14,31 @@ class MapContainer extends Component {
 
 
     getPlaces = () => {
-        this.state.places = places.places;
+        this.setState(
+            { places: places.locations }
+        );
     }
 
     initMap = () => {
         const ikebukuro = { lat: 35.724663768, lng: 139.70666384 };
-        const map = new window.google.maps.Map(document.getElementById('map'), { zoom: 12, center: ikebukuro });
+        const map = new window.google.maps.Map(document.getElementById('map'), { zoom: 18, center: ikebukuro });
         const markers = [];
+
+        const largeInfoWindow = new window.google.maps.InfoWindow();
+
+        const populateInfoWindow = (marker, infoWindow) => {
+            console.log('oiii', marker);
+            if (infoWindow.marker !== marker) {
+                infoWindow.marker = marker;
+                const content = `<div>${marker.title}</div>`;
+                infoWindow.setContent(content);
+                infoWindow.open(map, marker);
+                infoWindow.addListener('closeclick', () => {
+                    infoWindow.setMarker(null);
+                })
+            }
+
+        }
 
         const markerFromPlace = (place, index) => {
             const marker = new window.google.maps.Marker({
@@ -30,12 +48,13 @@ class MapContainer extends Component {
                 animation: window.google.maps.Animation.DROP,
                 id: index
             });
+            marker.addListener('click', () => {
+                populateInfoWindow(marker, largeInfoWindow);
+            })
             markers.push(marker);
-            console.log(marker);
         }
-       this.state.places.forEach((place, index) => markerFromPlace(place, index));
+        this.state.places.forEach((place, index) => markerFromPlace(place, index));
     }
-
 
     injectScript = () => {
         // Inject a <script> tag calling the Google Maps API

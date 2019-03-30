@@ -1,9 +1,18 @@
 {
-    "places": [{
-        "title": "Sunshine Aquarium",
-        "position": {
-            "lat": 35.72917,
-            "lng": 139.71806
+    "locations": [{
+            "title": "Sunshine Aquarium",
+            "position": {
+                "lat": 35.72917,
+                "lng": 139.71806
+            }
+        },
+        {
+            "title": "Pokemon Center Mega",
+            "position": {
+                "lat": 35.729024,
+                "lng": 139.719322
+            }
         }
-    }]
+    ]
+
 }
