@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import MapContainer from './MapContainer';
 
 class MainScreen extends Component {
     state = { 
@@ -8,9 +9,7 @@ class MainScreen extends Component {
     render () {
         return (
             <main className="main-screen"> 
-                <p>
-                    Ssssss
-                </p>
+                <MapContainer />
             </main>
         )
     }
