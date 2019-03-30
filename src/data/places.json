@@ -1,7 +1,7 @@
 {
     "places": [{
         "title": "Sunshine Aquarium",
-        "location": {
+        "position": {
             "lat": 35.72917,
             "lng": 139.71806
         }
