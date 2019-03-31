@@ -22,9 +22,9 @@ class MapContainer extends Component {
     initMap = () => {
         const ikebukuro = { lat: 35.724663768, lng: 139.70666384 };
         const map = new window.google.maps.Map(document.getElementById('map'),
-            { 
-                zoom: 12, 
-                center: ikebukuro 
+            {
+                zoom: 12,
+                center: ikebukuro
             });
         const markers = [];
 
@@ -41,7 +41,6 @@ class MapContainer extends Component {
                     infoWindow.setMarker(null);
                 })
             }
-
         }
 
         const markerFromPlace = (place, index) => {
@@ -70,15 +69,27 @@ class MapContainer extends Component {
         document.head.appendChild(script);
     }
 
+    getFlickrPhotos = (url) => fetch(url)
+        .then(nonJsonPromise => nonJsonPromise.json())
+        .then(jsonResponse => jsonResponse.photos.photo);
 
-    componentDidMount() {
-        const api = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=836949a9fc14a32fcaf88c66c9ba6b10&text=pokemon+center+ikebukuro&format=json&nojsoncallback=1&api_sig=27a2dafa37f81ba3ecd7bb3a906a31a5';
-        fetch(api).then(xd => 
-             xd.json()
-            ).then(jsonResponse => console.log('promessa', jsonResponse.photos.photo));
+
+
+    async componentDidMount() {
+        const text = 'pokemon+center+ikebukuro'
+        const callUrl = `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=836949a9fc14a32fcaf88c66c9ba6b10&text=${text}&format=json&nojsoncallback=1&api_sig=27a2dafa37f81ba3ecd7bb3a906a31a5`;
+        const photosWrapper = await this.getFlickrPhotos(callUrl);
+        const firstPhoto = photosWrapper[0];
+        console.log('photos', firstPhoto);
+
+        // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
+        const imgUrl = `https://farm${firstPhoto.farm}.staticflickr.com/${firstPhoto.server}/${firstPhoto.id}_${firstPhoto.secret}_m.jpg`;
+        console.log('testeUrl', imgUrl);
+
+
         this.getPlaces();
         this.injectScript();
-        
+
     }
 
     render() {
