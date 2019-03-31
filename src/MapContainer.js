@@ -21,7 +21,11 @@ class MapContainer extends Component {
 
     initMap = () => {
         const ikebukuro = { lat: 35.724663768, lng: 139.70666384 };
-        const map = new window.google.maps.Map(document.getElementById('map'), { zoom: 18, center: ikebukuro });
+        const map = new window.google.maps.Map(document.getElementById('map'),
+            { 
+                zoom: 12, 
+                center: ikebukuro 
+            });
         const markers = [];
 
         const largeInfoWindow = new window.google.maps.InfoWindow();
@@ -68,9 +72,13 @@ class MapContainer extends Component {
 
 
     componentDidMount() {
+        const api = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=836949a9fc14a32fcaf88c66c9ba6b10&text=pokemon+center+ikebukuro&format=json&nojsoncallback=1&api_sig=27a2dafa37f81ba3ecd7bb3a906a31a5';
+        fetch(api).then(xd => 
+             xd.json()
+            ).then(jsonResponse => console.log('promessa', jsonResponse.photos.photo));
         this.getPlaces();
         this.injectScript();
-
+        
     }
 
     render() {
