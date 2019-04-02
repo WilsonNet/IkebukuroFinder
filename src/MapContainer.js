@@ -7,6 +7,7 @@ import places from './data/places.json';
 
 
 class MapContainer extends Component {
+    flickrKey = '90088c1a8f165876785c6e57de1a785b';
 
     state = {
         places: []
@@ -20,10 +21,10 @@ class MapContainer extends Component {
     }
 
     initMap = () => {
-        const ikebukuro = { lat: 35.724663768, lng: 139.70666384 };
+        const ikebukuro = { lat: 35.726081, lng: 139.721864 };
         const map = new window.google.maps.Map(document.getElementById('map'),
             {
-                zoom: 12,
+                zoom: 15,
                 center: ikebukuro
             });
         const markers = [];
@@ -31,7 +32,6 @@ class MapContainer extends Component {
         const largeInfoWindow = new window.google.maps.InfoWindow();
 
         const populateInfoWindow = (marker, infoWindow) => {
-            console.log('oiii', marker);
             if (infoWindow.marker !== marker) {
                 infoWindow.marker = marker;
                 const content = `<div>${marker.title}</div>`;
@@ -68,26 +68,33 @@ class MapContainer extends Component {
         script.defer = true;
         document.head.appendChild(script);
     }
+    
+    createUrlFromText = (text) => `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${this.flickrKey}&text=${text}&format=json&nojsoncallback=1`;
 
     getFlickrPhotos = (url) => fetch(url)
         .then(nonJsonPromise => nonJsonPromise.json())
         .then(jsonResponse => jsonResponse.photos.photo);
 
+    getFirstPhotoUrl = (flickrPhotos) => {
+        const firstPhoto = flickrPhotos[0];
+                // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
+        const imgUrl = `https://farm${firstPhoto.farm}.staticflickr.com/${firstPhoto.server}/${firstPhoto.id}_${firstPhoto.secret}_m.jpg`;
+        return imgUrl;
+    }
+
 
 
     async componentDidMount() {
-        const text = 'pokemon+center+ikebukuro'
-        const callUrl = `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=836949a9fc14a32fcaf88c66c9ba6b10&text=${text}&format=json&nojsoncallback=1&api_sig=27a2dafa37f81ba3ecd7bb3a906a31a5`;
-        const photosWrapper = await this.getFlickrPhotos(callUrl);
-        const firstPhoto = photosWrapper[0];
-        console.log('photos', firstPhoto);
-
-        // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
-        const imgUrl = `https://farm${firstPhoto.farm}.staticflickr.com/${firstPhoto.server}/${firstPhoto.id}_${firstPhoto.secret}_m.jpg`;
-        console.log('testeUrl', imgUrl);
-
-
         this.getPlaces();
+        this.state.places.map()
+
+        const text = 'pokemon+center+ikebukuro'
+        const url = this.createUrlFromText(text);
+        const photosWrapper = await this.getFlickrPhotos(url);
+        
+
+
+
         this.injectScript();
 
     }
