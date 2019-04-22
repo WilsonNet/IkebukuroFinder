@@ -7,7 +7,7 @@ import places from './data/places.json';
 
 
 class MapContainer extends Component {
-    flickrKey = '90088c1a8f165876785c6e57de1a785b';
+    flickrKey = 'df28ab91eece9af8243f30ee767e75ac';
 
     state = {
         places: []
@@ -86,10 +86,11 @@ class MapContainer extends Component {
 
     async componentDidMount() {
         this.getPlaces();
-        this.state.places.map()
+        // this.state.places.map();
 
         const text = 'pokemon+center+ikebukuro'
         const url = this.createUrlFromText(text);
+        console.log(url);
         const photosWrapper = await this.getFlickrPhotos(url);
         
 
