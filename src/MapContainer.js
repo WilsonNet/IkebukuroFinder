@@ -3,6 +3,7 @@
 // https://scotch.io/tutorials/react-apps-with-the-google-maps-api-and-google-maps-react
 import React, { Component } from 'react';
 import places from './data/places.json';
+import { promises } from 'fs';
 
 
 
@@ -21,6 +22,7 @@ class MapContainer extends Component {
     }
 
     initMap = () => {
+        // Set initial point
         const ikebukuro = { lat: 35.726081, lng: 139.721864 };
         const map = new window.google.maps.Map(document.getElementById('map'),
             {
@@ -32,6 +34,7 @@ class MapContainer extends Component {
         const largeInfoWindow = new window.google.maps.InfoWindow();
 
         const populateInfoWindow = (marker, infoWindow) => {
+            // Iterate through markers
             if (infoWindow.marker !== marker) {
                 infoWindow.marker = marker;
                 const content = `<div>${marker.title}</div>`;
@@ -68,7 +71,7 @@ class MapContainer extends Component {
         script.defer = true;
         document.head.appendChild(script);
     }
-    
+
     createUrlFromText = (text) => `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${this.flickrKey}&text=${text}&format=json&nojsoncallback=1`;
 
     getFlickrPhotos = (url) => fetch(url)
@@ -77,25 +80,26 @@ class MapContainer extends Component {
 
     getFirstPhotoUrl = (flickrPhotos) => {
         const firstPhoto = flickrPhotos[0];
-                // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
+        // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
         const imgUrl = `https://farm${firstPhoto.farm}.staticflickr.com/${firstPhoto.server}/${firstPhoto.id}_${firstPhoto.secret}_m.jpg`;
         return imgUrl;
     }
 
+    getFirstPhotoFromPlace = async (place) => {
+        const text = place.title;
+        const url = this.createUrlFromText(text);
+        const photosWrapper = await this.getFlickrPhotos(url);
+        return this.getFirstPhotoUrl(photosWrapper);
+    }
 
 
     async componentDidMount() {
-        this.getPlaces();
-        // this.state.places.map();
-
-        const text = 'pokemon+center+ikebukuro'
-        const url = this.createUrlFromText(text);
-        console.log(url);
-        const photosWrapper = await this.getFlickrPhotos(url);
-        
-
-
-
+        await this.getPlaces();
+        const photos = this.state.places.map(place => this.createUrlFromText(place.title))
+            .map(async url => await this.getFlickrPhotos(url));
+        const resolvedPhotos = await Promise.all(photos);
+        const photoLinks = resolvedPhotos.map(photo => this.getFirstPhotoUrl(photo));
+        console.log(photoLinks);
         this.injectScript();
 
     }

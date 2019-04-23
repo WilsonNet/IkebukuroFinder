@@ -1,13 +1,13 @@
 {
     "locations": [{
-            "title": "Sunshine Aquarium",
+            "title": "Sunshine+Aquarium+Ikebukuro",
             "position": {
                 "lat": 35.72917,
                 "lng": 139.71806
             }
         },
         {
-            "title": "Pokemon Center",
+            "title": "Pokemon+Center+Ikebukuro",
             "position": {
                 "lat": 35.729024,
                 "lng": 139.719322
