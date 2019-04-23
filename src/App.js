@@ -5,11 +5,19 @@ import MainScreen from './MainScreen';
 //Oi
 
 class App extends Component {
+  state = {
+    markers: []
+  }
+  updateMarkers = (markers) => {
+
+  }
   render() {
     return (
       <div className="app">
         <Sidebar/>
-        <MainScreen/>
+        <MainScreen
+          onUpdateMarkers = { (markers) => this.updateMarkers }
+        />
       </div>
     );
   }
